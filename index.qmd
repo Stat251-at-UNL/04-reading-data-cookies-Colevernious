@@ -73,13 +73,16 @@ Another useful technique for exploratory data analysis is to generate summary ta
 ```{r}
 library(dplyr)
 library(stringr)
-proportion <- cookies |>
+total_recipes <- n_distinct(cookies$Recipe_Index)
+Proportion <- cookies |>
   group_by(Ingredient) |>
-  summarize(count = n()) |>
-  arrange(desc(count)) |>
+  summarize(recipe_count = n_distinct(Recipe_Index)) |>
+  arrange(desc(recipe_count)) |>
   top_n(20) |>
-  mutate(proportion = count / sum(count))
+  mutate(proportion = recipe_count / total_recipes)
+
 print(proportion)
+
 ```
 
 ```{python}
@@ -89,10 +92,9 @@ print(proportion)
 \[Part 2\] Print out a character string that lists all of the ingredients that do not appear in at least 20 recipes.
 
 ```{r}
-library(stringr)
 less_twenty <- proportion[proportion$count < 20, "Ingredient"]
-result <- paste(less_twenty, collapse = ", ")
-print(result)
+less_twenty <-unlist(less_twenty)
+cat(less_twenty, sep = ", ")
 ```
 
 (Delete this note, but you can include data values inline in markdown text by using backticks, at least in R. For instance, here is R's built in value for pi: `r pi`. Unfortunately, this doesn't work in python using the knitr markdown engine, but you can print the list out in python anyways using a code chunk.)
@@ -105,9 +107,9 @@ Using whatever plotting system you are comfortable with in R or python, see if y
 
 ```{r}
 library(ggplot2)
-ggplot(cookies) + geom_point(aes(x = Ingredient, y = Rating))
+ggplot(cookies) + geom_point(aes(x = X, y = Rating))
 ```
 
 \[Part 2\] Write 2-3 sentences about what you can learn from that plot and what directions you might want to investigate from here.
 
-While the y-axis is pretty straight forward, it may be smart to change or bound the x-axis so the Ingredients that go along it can be visibly seen. If the x-axis is visible, you can then look at which ingredient tends to have higher ratings when used.
+From this graph, you can look for which ingredient in a recipe (variable X on the x-axis) has the highest rating (y-axis). From there, you can search for trends, like if one ingredient is consistently receiving a high/low rating. You could then create the best possible cookie recipe.

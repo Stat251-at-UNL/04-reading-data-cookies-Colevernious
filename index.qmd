@@ -15,8 +15,6 @@ cookies <- read.csv("choc_chip_cookie_ingredients.csv")
 ```
 
 ```{python}
-import pandas as pd
-csvFile = pd.read_csv('choc_chip_cookie_ingredients.csv')
 ```
 
 ## Exploratory Data Analysis
@@ -72,27 +70,23 @@ Another useful technique for exploratory data analysis is to generate summary ta
 
 ```{r}
 library(dplyr)
-library(stringr)
 total_recipes <- n_distinct(cookies$Recipe_Index)
-Proportion <- cookies |>
+Prop <- cookies |>
   group_by(Ingredient) |>
   summarize(recipe_count = n_distinct(Recipe_Index)) |>
   arrange(desc(recipe_count)) |>
   top_n(20) |>
-  mutate(proportion = recipe_count / total_recipes)
+  mutate(Prop = recipe_count / total_recipes)
 
-print(proportion)
-
-```
-
-```{python}
+print(Prop)
 
 ```
+
 
 \[Part 2\] Print out a character string that lists all of the ingredients that do not appear in at least 20 recipes.
 
 ```{r}
-less_twenty <- proportion[proportion$count < 20, "Ingredient"]
+less_twenty <- Prop[Prop$recipe_count < 20, "Ingredient"] 
 less_twenty <-unlist(less_twenty)
 cat(less_twenty, sep = ", ")
 ```
